@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  templatedb:
+    image: postgres:17
+    container_name: templatedb
+    restart: always
+    environment:
+      POSTGRES_DB: templatedb
+      POSTGRES_USER: djangouser
+      POSTGRES_PASSWORD: djangouser
+    volumes:
+      - ./database-data:/var/lib/postgresql/data
+      - ./config/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 4432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U djangouser -d templatedb"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  templateapi:
+    container_name: templateapi
+    build:
+      context: .
+    depends_on:
+      templatedb:
+        condition: service_healthy
+    volumes:
+      - .:/django
+    restart: always
+    env_file: .env
+    ports:
+      - 8000:8000
+    entrypoint: ["/entrypoint.sh"]
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
