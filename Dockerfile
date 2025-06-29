@@ -21,7 +21,7 @@ WORKDIR /django
 
 # Copy requirements and install dependencies
 ADD ./requirements /django/requirements
-RUN pip3 install -r /django/requirements/production.txt
+RUN pip3 install -r /django/requirements/development.txt
 
 # Copy project files and entrypoint.sh script
 COPY ./docker-entrypoint.sh /entrypoint.sh

@@ -1,6 +1,6 @@
 # pytest
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "config.settings"
+DJANGO_SETTINGS_MODULE = "config.settings.development"
 
 # isort
 [tool.isort]
@@ -49,3 +49,4 @@ omit = [
 name = "cz_conventional_commits"
 version = "0.1.0"
 update_changelog_on_bump = true
+hook = true
