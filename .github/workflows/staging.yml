@@ -27,18 +27,24 @@ jobs:
           --health-retries 5
 
     env:
-      DATABASE_URL: postgres://djangouser:djangouser@localhost:5432/templatedb
-      DJANGO_SETTINGS_MODULE: config.settings
-      SECRET_KEY: dummy
+      DJANGO_SETTINGS_MODULE: ${{ vars.DJANGO_SETTINGS_MODULE }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      DEBUG: ${{ vars.DEBUG }}
+      DATABASE_ENGINE: ${{ vars.DATABASE_ENGINE }}
+      DATABASE_NAME: ${{ vars.DATABASE_NAME }}
+      DATABASE_USER: ${{ vars.DATABASE_USER }}
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      DATABASE_HOST: ${{ vars.DATABASE_HOST }}
+      DATABASE_PORT: ${{ vars.DATABASE_PORT }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python 3.11
+      - name: Set up Python ${{ vars.PYTHON_VERSION }}
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: ${{ vars.PYTHON_VERSION || '3.11' }}
 
       - name: Install dependencies
         run: |
